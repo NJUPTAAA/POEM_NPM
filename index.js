@@ -1,5 +1,4 @@
 const supportStandard=["1.0"];
-const fstream = require('fstream');
 const unzip = require('unzip');
 const path = require('path');
 const fs = require('fs');
