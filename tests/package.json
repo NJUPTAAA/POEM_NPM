@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/NJUPTAAA/POEM_NPM",
   "dependencies": {
+    "poem": "0.0.1",
     "unzip": "^0.1.11"
   }
 }
