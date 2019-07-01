@@ -7,13 +7,15 @@ const fs = require('fs');
 exports.parse = function (_poemPath, type="auto") {
     if (type=="auto") {
         type=path.extname((_poemPath))===".poem"?"poem":"poetry";
-        console.log(path.extname((_poemPath)));
     }
 
     if (type=="poem") {
         ret=JSON.parse(fs.readFileSync(_poemPath));
     } else if (type=="poetry") {
-        let tmpPath=__dirname + "/tmp/" + new Date().getTime();
+        let tmpPath=__dirname + "/tmp/" + new Date().getTime() + "/";
+        if (!fs.existsSync(tmpPath)) {
+            fs.mkdirSync(tmpPath);
+        }
         fs.createReadStream(_poemPath).pipe(unzip.Parse()).pipe(fstream.Writer(tmpPath));
         ret=[];
     }
