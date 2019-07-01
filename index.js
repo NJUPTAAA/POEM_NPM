@@ -1,38 +1,23 @@
 const supportStandard=["1.0"];
+const fstream = require('fstream');
+const unzip = require('unzip');
 const path = require('path');
 const fs = require('fs');
 
-function isJson(str) {
-    if (typeof str == 'string') {
-        try {
-            var obj=JSON.parse(str);
-            if(typeof obj == 'object' && obj ){
-                return true;
-            }else{
-                return false;
-            }
-
-        } catch(e) {
-            console.log('error：'+str+'!!!'+e);
-            return false;
-        }
-    }
-    return false;
-}
-
 exports.parse = function (_poemPath, type="auto") {
     if (type=="auto") {
-        type=path.extname((_poemPath))==="poem"?"poem":"poetry";
+        type=path.extname((_poemPath))===".poem"?"poem":"poetry";
+        console.log(path.extname((_poemPath)));
     }
 
     if (type=="poem") {
-        ret=JSON.parse(poemRaw);
+        ret=JSON.parse(fs.readFileSync(_poemPath));
     } else if (type=="poetry") {
         let tmpPath=__dirname + "/tmp/" + new Date().getTime();
         fs.createReadStream(_poemPath).pipe(unzip.Parse()).pipe(fstream.Writer(tmpPath));
         ret=[];
     }
-
+    console.log(ret);
     return ret;
 };
 
