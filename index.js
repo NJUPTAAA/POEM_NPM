@@ -4,15 +4,19 @@ const unzip = require('unzip');
 const path = require('path');
 const fs = require('fs');
 
-exports.parse = function (_poemPath, type="auto") {
+exports.parse = function (_poemPath, type="auto", callback=null) {
+    var ret=[];
+
     if (type=="auto") {
         type=path.extname((_poemPath))===".poem"?"poem":"poetry";
     }
 
     if (type=="poem") {
         ret=JSON.parse(fs.readFileSync(_poemPath));
+        if(typeof callback === "function") {
+            callback(ret);
+        }
     } else if (type=="poetry") {
-        ret=[];
         let tmpPath=__dirname + "/tmp/" + new Date().getTime() + "/";
         if (!fs.existsSync(tmpPath)) {
             fs.mkdirSync(tmpPath);
@@ -24,16 +28,19 @@ exports.parse = function (_poemPath, type="auto") {
                 let fileName = entry.path;
                 let type = entry.type;
                 let size = entry.size;
-                if(type=='File'){
-                    entry.pipe(fs.createWriteStream(tmpPath+fileName));
+                if(type=='File') {
+                    entry.pipe(fs.createWriteStream(tmpPath+fileName)).once("close",function () {
+                        ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
+                    });
                     procced=true;
-                    ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
                 }
+            }
+        }).once("close",function () {
+            if(typeof callback === "function") {
+                callback(ret);
             }
         });
     }
-    console.log(ret);
-    return ret;
 };
 
 exports.generate = function (_poemRaw, type="poem") {
