@@ -1,4 +1,6 @@
-var supportStandard=["1.0"];
+const supportStandard=["1.0"];
+const path = require('path');
+const fs = require('fs');
 
 function isJson(str) {
     if (typeof str == 'string') {
@@ -20,7 +22,7 @@ function isJson(str) {
 
 exports.parse = function (_poemPath, type="auto") {
     if (type=="auto") {
-        type=isJson(poemRaw)?"poem":"poetry";
+        type=path.extname((_poemPath))==="poem"?"poem":"poetry";
     }
 
     if (type=="poem") {
