@@ -40,11 +40,11 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
                     if(type=='File') {
                         entry.pipe(fs.createWriteStream(tmpPath+fileName)).once("close",function () {
                             ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
+                            if(typeof callback === "function") {
+                                callback(ret);
+                            }
                         });
                         procced=true;
-                        if(typeof callback === "function") {
-                            callback(ret);
-                        }
                     }
                 }
             }).on('error', function (e) {
