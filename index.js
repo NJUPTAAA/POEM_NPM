@@ -42,15 +42,14 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
                             ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
                         });
                         procced=true;
+                        if(typeof callback === "function") {
+                            callback(ret);
+                        }
                     }
                 }
             }).on('error', function (e) {
                 console.warn(e);
                 callback({});
-            }).once("close",function () {
-                if(typeof callback === "function") {
-                    callback(ret);
-                }
             });
         } catch(e) {
             console.warn(e);
