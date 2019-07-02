@@ -22,7 +22,11 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
         }
     } else if (type=="poetry") {
         try {
-            let tmpPath=__dirname + "/tmp/" + new Date().getTime() + "/";
+            let tmpPath=__dirname + "/tmp/";
+            if (!fs.existsSync(tmpPath)) {
+                fs.mkdirSync(tmpPath);
+            }
+            tmpPath=__dirname + "/tmp/" + new Date().getTime() + "/";
             if (!fs.existsSync(tmpPath)) {
                 fs.mkdirSync(tmpPath);
             }
