@@ -1,2 +1,2 @@
-# POEM_NPM
+# POEM NPM
 NPM Package for POEM
