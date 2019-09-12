@@ -5,6 +5,7 @@ const standard="1.0";
 const unzip = require('unzip');
 const path = require('path');
 const fs = require('fs');
+const JSZip = require('JSZip');
 const _ = require("lodash");
 
 exports.parse = function (_poemPath, type="auto", callback=null) {
@@ -62,8 +63,8 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
     }
 };
 
-function val(value,init){
-    return value===undefined ? init : value;
+function val(value, defVal){
+    return value===undefined ? defVal : value;
 }
 
 function prepareJSON(_poemRaw) {
@@ -106,19 +107,19 @@ function prepareJSON(_poemRaw) {
             },
             sample: [],
             extra: {
-                markdown: Boolean(val((_problem.extra.markdown, true))),
-                forceRaw: Boolean(val((_problem.extra.forceRaw, false))),
-                partial: Boolean(val((_problem.extra.partial, false))),
+                markdown: Boolean(val(_problem.extra.markdown, true)),
+                forceRaw: Boolean(val(_problem.extra.forceRaw, false)),
+                partial: Boolean(val(_problem.extra.partial, false)),
                 totScore: _problem.extra.totScore >> 0 || 0,
             },
             testCases: [],
-            specialJudge: Boolean(val((_problem.specialJudge, false))),
+            specialJudge: Boolean(val(_problem.specialJudge, false)),
             solution: []
         };
         if(supportType.includes(_problem.type)) problem.type=_problem.type;
         else throw "Unsupported Type";
         if(problem.type==="OnlineJudge"){
-            problem.extra.totScore=problem.testCases.length;
+            problem.extra.totScore=_problem.testCases.length;
         }
         _problem.sample.forEach(_sample=>{
             problem.sample.push(_.merge({
@@ -167,7 +168,7 @@ function saveTo(JSONString, filePath, format, callback) {
                         fs.mkdirSync(tmpPath);
                     }
                     var zip = new JSZip();
-                    zip.file(path.basename(fileName), JSONString);
+                    zip.file(path.basename(filePath, '.poetry')+'.poem', JSONString);
                     zip.generateAsync({type:"nodebuffer"}).then(function(content) {
                         fs.writeFileSync(filePath, content);
                         if(typeof callback === "function") {
