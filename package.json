@@ -1,6 +1,6 @@
 {
   "name": "njuptaaa-poem",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "parser for Problem-Oriented Exchangeable Mechanism.",
   "main": "index.js",
   "scripts": {
