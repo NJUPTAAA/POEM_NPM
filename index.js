@@ -88,19 +88,19 @@ function prepareJSON(_poemRaw) {
     problems.forEach(_problem => {
         let problem={
             ..._.merge(poemProblem, _.pick(_problem,Object.keys(poemProblem))),
-            require={
+            require: {
                 MathJax:_problem.require.MathJax==true
             },
-            resources=[],
-            timeLimit={
+            resources: [],
+            timeLimit: {
                 unit: "ms",
                 value: _problem.time_limit * 1 || 0
             },
-            memoryLimit={
+            memoryLimit: {
                 unit: "kb",
                 value: _problem.memory_limit * 1 || 0
             },
-            source={
+            source: {
                 url: val(_problem.source.url,null),
                 name: val(_problem.source.name,null)
             },
