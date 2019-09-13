@@ -43,13 +43,13 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
                     if(typeof callback === "function") {
                         callback({parsed:ret},{});
                     }
-                }).catch(function (reason) {
+                }).catch(function (e) {
                     console.warn(e);
                     if(typeof callback === "function") {
                         callback({}, {msg:e});
                     }
                 });
-            }).catch(function (reason) {
+            }).catch(function (e) {
                 console.warn(e);
                 if(typeof callback === "function") {
                     callback({}, {msg:e});
