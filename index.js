@@ -2,7 +2,6 @@ const supportStandard=["1.0"];
 const supportType=["OnlineJudge"];
 const supportFormat=["poem", "poetry"];
 const standard="1.0";
-const unzip = require('unzip');
 const path = require('path');
 const fs = require('fs');
 const JSZip = require('JSZip');
@@ -19,11 +18,13 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
         try {
             ret=JSON.parse(fs.readFileSync(_poemPath));
             if(typeof callback === "function") {
-                callback(ret);
+                callback({parsed:ret},{});
             }
         }catch(e){
             console.warn(e);
-            callback({});
+            if(typeof callback === "function") {
+                callback({}, {msg:e});
+            }
         }
     } else if (type=="poetry") {
         try {
@@ -35,30 +36,35 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
             if (!fs.existsSync(tmpPath)) {
                 fs.mkdirSync(tmpPath);
             }
-            var procced=false;
-            fs.createReadStream(_poemPath).pipe(unzip.Parse()).on('entry', function (entry) {
-                if(procced==true) entry.autodrain();
-                else {
-                    let fileName = entry.path;
-                    let type = entry.type;
-                    let size = entry.size;
-                    if(type=='File') {
-                        entry.pipe(fs.createWriteStream(tmpPath+fileName)).once("close",function () {
-                            ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
-                            if(typeof callback === "function") {
-                                callback(ret);
-                            }
-                        });
-                        procced=true;
-                    }
-                }
-            }).on('error', function (e) {
-                console.warn(e);
-                callback({});
-            });
+            // var procced=false;
+            // fs.createReadStream(_poemPath).pipe(unzip.Parse()).on('entry', function (entry) {
+            //     if(procced==true) entry.autodrain();
+            //     else {
+            //         let fileName = entry.path;
+            //         let type = entry.type;
+            //         let size = entry.size;
+            //         if(type=='File') {
+            //             entry.pipe(fs.createWriteStream(tmpPath+fileName)).once("close",function () {
+            //                 ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
+            //                 if(typeof callback === "function") {
+            //                     callback(ret);
+            //                 }
+            //             });
+            //             procced=true;
+            //         }
+            //     }
+            // }).on('error', function (e) {
+            //     console.warn(e);
+            //     if(typeof callback === "function") {
+            //         callback({}, {msg:e});
+            //     }
+            // });
+            
         } catch(e) {
             console.warn(e);
-            callback({});
+            if(typeof callback === "function") {
+                callback({}, {msg:e});
+            }
         }
     }
 };

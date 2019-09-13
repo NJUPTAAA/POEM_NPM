@@ -21,7 +21,6 @@
   "homepage": "https://github.com/NJUPTAAA/POEM_NPM",
   "dependencies": {
     "jszip": "^3.2.2",
-    "lodash": "^4.17.15",
-    "unzip": "^0.1.11"
+    "lodash": "^4.17.15"
   }
 }
