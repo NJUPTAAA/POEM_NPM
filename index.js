@@ -36,30 +36,25 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
             if (!fs.existsSync(tmpPath)) {
                 fs.mkdirSync(tmpPath);
             }
-            // var procced=false;
-            // fs.createReadStream(_poemPath).pipe(unzip.Parse()).on('entry', function (entry) {
-            //     if(procced==true) entry.autodrain();
-            //     else {
-            //         let fileName = entry.path;
-            //         let type = entry.type;
-            //         let size = entry.size;
-            //         if(type=='File') {
-            //             entry.pipe(fs.createWriteStream(tmpPath+fileName)).once("close",function () {
-            //                 ret=JSON.parse(fs.readFileSync(tmpPath+fileName));
-            //                 if(typeof callback === "function") {
-            //                     callback(ret);
-            //                 }
-            //             });
-            //             procced=true;
-            //         }
-            //     }
-            // }).on('error', function (e) {
-            //     console.warn(e);
-            //     if(typeof callback === "function") {
-            //         callback({}, {msg:e});
-            //     }
-            // });
-            
+            var zip = new JSZip();
+            zip.loadAsync(fs.readFileSync("hello.zip")).then(function (zip) {
+                zip.file(zip.files[0]).async("string").then(function($str){
+                    ret=JSON.parse($str);
+                    if(typeof callback === "function") {
+                        callback({parsed:ret},{});
+                    }
+                }).catch(function (reason) {
+                    console.warn(e);
+                    if(typeof callback === "function") {
+                        callback({}, {msg:e});
+                    }
+                });
+            }).catch(function (reason) {
+                console.warn(e);
+                if(typeof callback === "function") {
+                    callback({}, {msg:e});
+                }
+            });
         } catch(e) {
             console.warn(e);
             if(typeof callback === "function") {
