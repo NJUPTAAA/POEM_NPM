@@ -37,8 +37,8 @@ exports.parse = function (_poemPath, type="auto", callback=null) {
                 fs.mkdirSync(tmpPath);
             }
             var zip = new JSZip();
-            zip.loadAsync(fs.readFileSync("hello.zip")).then(function (zip) {
-                zip.file(zip.files[0]).async("string").then(function($str){
+            zip.loadAsync(fs.readFileSync(_poemPath)).then(function (zip) {
+                zip.file(Object.keys(zip.files)[0]).async("string").then(function($str){
                     ret=JSON.parse($str);
                     if(typeof callback === "function") {
                         callback({parsed:ret},{});
