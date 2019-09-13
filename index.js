@@ -73,10 +73,11 @@ function prepareJSON(_poemRaw) {
         "url": "https://github.com/NJUPTAAA/POEM_NPM",
         "description": "",
     };
+    const temp = _.merge(poemGeneral, _.pick(_poemRaw.general, Object.keys(poemGeneral)));
     poemGeneral={
         "standard": standard,
-        ..._.merge(poemGeneral, _.pick(_poemRaw.general,Object.keys(poemGeneral))),
     };
+    Object.assign(poemGeneral, temp);
     let problems=_poemRaw.problems;
     let poemProblems=[];
     let poemProblem={
@@ -87,8 +88,8 @@ function prepareJSON(_poemRaw) {
         "note": "",
     };
     problems.forEach(_problem => {
+        const temp = _.merge(poemProblem, _.pick(_problem, Object.keys(poemProblem)));
         let problem={
-            ..._.merge(poemProblem, _.pick(_problem,Object.keys(poemProblem))),
             require: {
                 MathJax:_problem.require.MathJax==true
             },
@@ -116,6 +117,7 @@ function prepareJSON(_poemRaw) {
             specialJudge: Boolean(val(_problem.specialJudge, false)),
             solution: []
         };
+        Object.assign(problem, temp);
         if(supportType.includes(_problem.type)) problem.type=_problem.type;
         else throw "Unsupported Type";
         if(problem.type==="OnlineJudge"){
@@ -135,10 +137,11 @@ function prepareJSON(_poemRaw) {
         });
         poemProblems.push(problem);
     });
-    return JSON.stringify({
-        ...poemGeneral,
+    const result = {
         problems: poemProblems
-    });
+    };
+    Object.assign(result, poemGeneral);
+    return JSON.stringify(result);
 }
 
 function saveTo(JSONString, filePath, format, callback) {
