@@ -4,7 +4,7 @@ const supportFormat=["poem", "poetry"];
 const standard="1.0";
 const path = require('path');
 const fs = require('fs');
-const JSZip = require('JSZip');
+const JSZip = require('jszip');
 const _ = require("lodash");
 
 exports.parse = function (_poemPath, type="auto", callback=null) {
